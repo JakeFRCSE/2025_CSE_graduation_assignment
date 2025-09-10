@@ -42,7 +42,6 @@ services:
     volumes:
       - ./back_end/app:/app/app
       - ./front_end/dist:/app/app/static
-      - ./nlp:/app/app/nlp
     networks:
       - kokeybert
 

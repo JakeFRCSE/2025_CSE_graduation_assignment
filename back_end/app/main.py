@@ -180,4 +180,4 @@ def extract_keywords(text: str = Form(...), db: Session = Depends(database.get_d
         "attention_result": attention_analysis_result
     })
 
-app.mount("/", StaticFiles(directory="app/static", html=True), name="static")
+app.mount("/", StaticFiles(directory="app/static", html=True, check_dir=False), name="static")
