@@ -42,7 +42,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.75'
+          cpus: '0.5'
     volumes:
       - ./back_end/app:/app/app
       - ./front_end/dist:/app/app/static
