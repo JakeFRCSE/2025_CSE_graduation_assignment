@@ -7,19 +7,13 @@ services:
       POSTGRES_USER: graduser
       POSTGRES_PASSWORD: graduser
       POSTGRES_DB: graddb
-      # 운영이면 trust 사용 금지. 필요하면 아래 줄 삭제하세요.
-      # POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
     volumes:
-      - "/home/ubuntu:/var/lib/postgresql/data"
+      - "/Users/chahyunlee/workspace/2025졸업과제/exe"
     networks:
       - kokeybert
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U graduser -d graddb || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
 
   frontend:
     build:
@@ -36,25 +30,22 @@ services:
 
   backend:
     build:
-      context: .                # 👈 리포 루트(중요!)
-      dockerfile: back_end/Dockerfile
+      context: ./back_end
+      dockerfile: Dockerfile
     container_name: fastapi-backend
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_healthy
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
-    # ❗ 아래 볼륨은 이미지에 구운 app/nlp를 덮어버리므로 제거
-    # volumes:
-    #   - ./back_end/app:/app/app
-    #   - ./front_end/dist:/app/app/static  # dist 빌드 산출물이 확실히 있을 때만 사용
+      - db
+    command: >
+      sh -c "sleep 10 && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./back_end/app:/app/app
+      - ./front_end/dist:/app/app/static
+      - ./nlp:/app/app/nlp
     networks:
       - kokeybert
 
 networks:
   kokeybert:
     driver: bridge
-
-volumes:
-  pgdata:
