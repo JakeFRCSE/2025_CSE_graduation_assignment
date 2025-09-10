@@ -40,7 +40,9 @@ services:
     command: >
       sh -c "sleep 30 && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     volumes:
+      - ./back_end/app:/app/app
       - ./front_end/dist:/app/app/static
+      - ./nlp:/app/app/nlp
     networks:
       - kokeybert
 
