@@ -8,17 +8,23 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# 최소 빌드 도구
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential curl \
  && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./requirements.txt
+# 의존성 설치 (CPU 전용 torch 먼저 고정 설치)
+COPY back_end/requirements.txt ./requirements.txt
 RUN python -m pip install --upgrade pip \
  && pip install --no-cache-dir torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu \
  && pip install --no-cache-dir -r requirements.txt
 
-# 앱 + NLP 리소스 이미지에 포함
-COPY app/ /app/app/
+# 앱 코드 + NLP 리소스 포함 (리포 루트 기준 경로)
+COPY back_end/app/ /app/app/
 COPY nlp/ /app/app/nlp/
 
+# (선택) HF 캐시 등 필요시
+# ENV TRANSFORMERS_CACHE=/app/.cache/hf
+
+# FastAPI 실행
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

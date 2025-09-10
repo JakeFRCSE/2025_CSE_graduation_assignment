@@ -7,12 +7,12 @@ services:
       POSTGRES_USER: graduser
       POSTGRES_PASSWORD: graduser
       POSTGRES_DB: graddb
-      # 운영이면 아래 trust 는 제거하세요
+      # 운영이면 trust 사용 금지. 필요하면 아래 줄 삭제하세요.
       # POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
     volumes:
-      - "/home/ubuntu"
+      - "/home/ubuntu:/var/lib/postgresql/data"
     networks:
       - kokeybert
     healthcheck:
@@ -36,23 +36,25 @@ services:
 
   backend:
     build:
-      context: ./back_end
-      dockerfile: Dockerfile
+      context: .                # 👈 리포 루트(중요!)
+      dockerfile: back_end/Dockerfile
     container_name: fastapi-backend
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
-    # dev에선 굳이 sleep 불필요 (DB healthcheck가 대신 보장)
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
-    # ❗모델을 이미지에 구웠으니 코드/전체 덮어쓰기 금지
+    # ❗ 아래 볼륨은 이미지에 구운 app/nlp를 덮어버리므로 제거
     # volumes:
     #   - ./back_end/app:/app/app
-    #   - ./front_end/dist:/app/app/static   # dist가 실제 있으면만 사용
+    #   - ./front_end/dist:/app/app/static  # dist 빌드 산출물이 확실히 있을 때만 사용
     networks:
       - kokeybert
 
 networks:
   kokeybert:
     driver: bridge
+
+volumes:
+  pgdata:
