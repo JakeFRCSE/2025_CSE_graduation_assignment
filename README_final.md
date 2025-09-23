@@ -210,16 +210,16 @@
 │   ├── Dockerfile                     # 백엔드 Docker 설정
 │   └── requirements.txt               # Python 의존성 패키지
 │
-├── front_end/                         # 프론트엔드 웹 애플리케이션
+├── front_end/                        # 프론트엔드 웹 애플리케이션
 │   ├── src/
-│   │   ├── components/                # React 컴포넌트
+│   │   ├── components/               # 컴포넌트
 │   │   │   ├── Drawer/               # 사이드바 컴포넌트
 │   │   │   ├── FloatingSearch/       # 플로팅 검색 컴포넌트
 │   │   │   └── SearchBar/            # 검색바 컴포넌트
 │   │   ├── pages/                    # 페이지 컴포넌트
 │   │   │   ├── Home/                 # 홈 페이지
 │   │   │   └── Detail/               # 상세 분석 페이지
-│   │   ├── api/                      # API 통신
+│   │   ├── api/                      # API
 │   │   │   ├── endpoints.ts          # API 엔드포인트 정의
 │   │   │   └── services/             # API 서비스 로직
 │   │   ├── types/                    # TypeScript 타입 정의
@@ -231,7 +231,7 @@
 │   │   ├── routes/                   # 라우팅 설정
 │   │   ├── utils/                    # 유틸리티 함수
 │   │   ├── styles/                   # 전역 스타일
-│   │   └── data/                     # 모크 데이터
+│   │   └── data/                     # mock 데이터
 │   ├── public/                       # 정적 자원
 │   ├── Dockerfile                    # 프론트엔드 Docker 설정
 │   ├── package.json                  # Node.js 의존성
