@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # 모델 초기화
-checkpoint = torch.load('app/nlp/models/kokeybert_distilled.pt', map_location=torch.device('cpu'), weights_only=False)
+checkpoint = torch.load('app/nlp/distill_KoKeyBERT.pt', map_location=torch.device('cpu'), weights_only=False)
 config = checkpoint['model_config']
 model = DistillKoKeyBERT(config=config)
 model.load_state_dict(checkpoint['model_state_dict'])
