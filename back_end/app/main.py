@@ -16,7 +16,6 @@ from transformers import BertConfig
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
-# CORS 허용
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -55,15 +54,11 @@ def extract_nva(text: str):
         return nouns, verbs, adjectives, [], []
 
 def save_pos_result_to_db(nouns, verbs, adjectives, keyword, user_input_id: int, db: Session):
-    # keyword 처리: 중복 제거 및 문자열 변환
     if isinstance(keyword, list) and keyword and isinstance(keyword[0], dict):
-        # 딕셔너리 리스트에서 'keyword' 값들 추출 후 중복 제거
         keywords = list(dict.fromkeys([item.get('keyword', '') for item in keyword if item.get('keyword')]))
     elif isinstance(keyword, (list, tuple, set)):
-        # 일반 리스트/튜플/셋에서 중복 제거
         keywords = list(dict.fromkeys([str(k) for k in keyword if k]))
     else:
-        # 단일 값인 경우
         keywords = [str(keyword)] if keyword else []
     
     pos_result_db = schemas.POSResultCreate(
@@ -83,9 +78,9 @@ def recent_results(db: Session = Depends(database.get_db)):
     for result in results:
         user_input_text = db.query(models.UserInput).filter(models.UserInput.index == result.user_input_id).first()
         response.append({
-            "id": result.user_input_id, # Frontend에서 `id`로 참조할 수 있도록 `user_input_id`를 반환
+            "id": result.user_input_id,
             "text": user_input_text.text if user_input_text else "",
-            "created_at": result.created_at.isoformat(), # 저장 날짜 추가
+            "created_at": result.created_at.isoformat(),
             "nouns": result.noun.split(", ") if result.noun else [],
             "verbs": result.verb.split(", ") if result.verb else [],
             "adjectives": result.adjective.split(", ") if result.adjective else [],
